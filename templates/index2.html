@@ -1,0 +1,871 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>SDRRAS - Smart Disaster Response System</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        min-height: 100vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 20px;
+      }
+
+      .container {
+        background: white;
+        border-radius: 20px;
+        border: 2px solid black;
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        max-width: 1200px;
+        width: 100%;
+        overflow: hidden;
+        animation: fadeIn 0.6s ease-out;
+      }
+
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+          transform: translateY(30px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      @keyframes pulse {
+        0%,
+        100% {
+          opacity: 0.6;
+          transform: scale(1);
+        }
+        50% {
+          opacity: 1;
+          transform: scale(1.1);
+        }
+      }
+
+      @keyframes slideIn {
+        from {
+          opacity: 0;
+          transform: translateY(10px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      @keyframes slideInRight {
+        from {
+          opacity: 0;
+          transform: translateX(100px);
+        }
+        to {
+          opacity: 1;
+          transform: translateX(0);
+        }
+      }
+      @keyframes slideInRight {
+        from {
+          opacity: 0;
+          transform: translateX(100px);
+        }
+        to {
+          opacity: 1;
+          transform: translateX(0);
+        }
+      }
+
+      @keyframes flashText {
+        0%,
+        100% {
+          opacity: 1;
+        }
+        50% {
+          opacity: 0.3;
+        }
+      }
+
+      .caution-banner {
+        background: linear-gradient(135deg, #e74c3c, #c0392b);
+        color: white;
+        padding: 16px;
+        text-align: center;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 15px;
+      }
+
+      .caution-text {
+        font-size: 20px;
+        font-weight: bold;
+        letter-spacing: 3px;
+        animation: flashText 1.5s infinite;
+      }
+
+      .caution-banner {
+        background: linear-gradient(135deg, #e74c3c, #c0392b);
+        color: white;
+        padding: 16px;
+        text-align: center;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 15px;
+      }
+
+      .caution-text {
+        font-size: 20px;
+        font-weight: bold;
+        letter-spacing: 3px;
+      }
+
+      .caution-icon {
+        font-size: 22px;
+        animation: pulse 1.5s infinite;
+      }
+
+      .sddrs-section {
+        background: #f8f9fa;
+        padding: 10px;
+        text-align: center;
+        font-size: 15px;
+        font-weight: 600;
+        color: #2c3e50;
+        border-bottom: 2px solid #e0e0e0;
+        letter-spacing: 2px;
+      }
+
+      .main-content {
+        padding: 25px;
+      }
+
+      .top-section {
+        display: grid;
+        grid-template-columns: 2fr 1fr 1fr;
+        gap: 18px;
+        margin-bottom: 25px;
+      }
+
+      .card {
+        background: white;
+        border: 2px solid #2c3e50;
+        border-radius: 12px;
+        padding: 18px;
+        transition: all 0.3s ease;
+      }
+
+      .card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.12);
+        border-color: #667eea;
+      }
+
+      .card-title {
+        font-size: 13px;
+        font-weight: bold;
+        margin-bottom: 8px;
+        color: #2c3e50;
+        text-align: center;
+        letter-spacing: 1px;
+      }
+
+      .alert-item {
+        margin: 8px 0;
+        padding: 10px;
+        background: #f8f9fa;
+        border-radius: 6px;
+        transition: all 0.3s ease;
+      }
+
+      .alert-text {
+        color: #2c3e50;
+        font-weight: 500;
+        font-size: 13px;
+      }
+
+      .location-badge {
+        display: inline-block;
+        padding: 3px 10px;
+        border-radius: 15px;
+        font-size: 11px;
+        font-weight: bold;
+        margin: 0 4px;
+      }
+
+      .location-badge.danger {
+        background: #e74c3c;
+        color: white;
+      }
+
+      .resource-btn {
+        width: 100%;
+        padding: 10px;
+        background: linear-gradient(135deg, #667eea, #764ba2);
+        color: white;
+        border: none;
+        border-radius: 8px;
+        font-size: 13px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+      }
+
+      .resource-btn:hover {
+        transform: scale(1.03);
+        box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+      }
+
+      .phone-label {
+        text-align: center;
+        color: #7f8c8d;
+        font-size: 11px;
+        margin-bottom: 8px;
+      }
+
+      .phone-input {
+        width: 100%;
+        padding: 8px;
+        border: 2px solid #e0e0e0;
+        border-radius: 6px;
+        font-size: 12px;
+        margin-bottom: 8px;
+        transition: border-color 0.3s;
+      }
+
+      .phone-input:focus {
+        outline: none;
+        border-color: #667eea;
+      }
+
+      .subscribe-btn {
+        width: 100%;
+        padding: 8px;
+        background: #2c3e50;
+        color: white;
+        border: none;
+        border-radius: 6px;
+        font-size: 12px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s;
+      }
+
+      .subscribe-btn:hover {
+        background: #667eea;
+      }
+
+      .disaster-section {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 18px;
+      }
+
+      .disaster-card {
+        background: white;
+        border: 2px solid #2c3e50;
+        border-radius: 12px;
+        padding: 25px;
+        text-align: center;
+        cursor: pointer;
+        transition: all 0.3s ease;
+      }
+
+      .disaster-card:hover {
+        transform: translateY(-8px);
+        box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+        border-color: #667eea;
+      }
+
+      .disaster-icon {
+        font-size: 45px;
+        margin-bottom: 10px;
+      }
+
+      .disaster-card h3 {
+        color: #2c3e50;
+        font-size: 16px;
+        font-weight: 600;
+      }
+
+      .bottom-actions {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        border-top: 2px solid #2c3e50;
+      }
+
+      .action-btn {
+        padding: 20px;
+        font-size: 16px;
+        font-weight: bold;
+        border: none;
+        cursor: pointer;
+        transition: all 0.3s ease;
+      }
+
+      .btn-icon {
+        font-size: 20px;
+        margin-right: 8px;
+      }
+
+      .chat-btn {
+        background: white;
+        color: #2c3e50;
+        border-right: 2px solid #2c3e50;
+      }
+
+      .donate-btn {
+        background: #2c3e50;
+        color: white;
+      }
+
+      .modal {
+        display: none;
+        position: fixed;
+        z-index: 1000;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.6);
+        backdrop-filter: blur(4px);
+      }
+
+      .modal-content {
+        background: white;
+        margin: 5% auto;
+        padding: 28px;
+        border-radius: 16px;
+        width: 90%;
+        max-width: 480px;
+        box-shadow: 0 15px 50px rgba(0, 0, 0, 0.3);
+        max-height: 85vh;
+        overflow-y: auto;
+      }
+
+      .close {
+        color: #aaa;
+        float: right;
+        font-size: 26px;
+        font-weight: bold;
+        cursor: pointer;
+        transition: color 0.3s;
+      }
+
+      .close:hover {
+        color: #e74c3c;
+      }
+
+      .modal h2 {
+        color: #2c3e50;
+        margin-bottom: 8px;
+        font-size: 22px;
+      }
+
+      .form-group {
+        margin-bottom: 18px;
+      }
+
+      .form-group label {
+        display: block;
+        margin-bottom: 6px;
+        font-weight: 600;
+        color: #2c3e50;
+        font-size: 13px;
+      }
+
+      .form-group input,
+      .form-group select {
+        width: 100%;
+        padding: 12px;
+        border: 2px solid #e0e0e0;
+        border-radius: 8px;
+        font-size: 14px;
+        transition: all 0.3s;
+      }
+
+      .form-group input:focus,
+      .form-group select:focus {
+        outline: none;
+        border-color: #667eea;
+        box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+      }
+
+      .submit-btn {
+        width: 100%;
+        padding: 14px;
+        background: linear-gradient(135deg, #667eea, #764ba2);
+        color: white;
+        border: none;
+        border-radius: 10px;
+        font-size: 15px;
+        font-weight: bold;
+        cursor: pointer;
+        transition: all 0.3s;
+      }
+
+      .submit-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 20px rgba(102, 126, 234, 0.4);
+      }
+
+      .submit-btn:disabled {
+        background: #ccc;
+        cursor: not-allowed;
+      }
+
+      .notification {
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        background: linear-gradient(135deg, #27ae60, #2ecc71);
+        color: white;
+        padding: 15px 25px;
+        border-radius: 10px;
+        box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2);
+        z-index: 10000;
+        display: none;
+        animation: slideInRight 0.4s ease;
+      }
+
+      .notification.show {
+        display: block;
+      }
+
+      .notification.error {
+        background: linear-gradient(135deg, #e74c3c, #c0392b);
+      }
+
+      .category-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 12px;
+      }
+
+      .category-btn {
+        padding: 20px 15px;
+        border: 2px solid #e0e0e0;
+        background: white;
+        border-radius: 12px;
+        cursor: pointer;
+        transition: all 0.3s;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 8px;
+      }
+
+      .category-btn:hover {
+        border-color: #667eea;
+        transform: translateY(-3px);
+      }
+
+      .category-btn.active {
+        border-color: #667eea;
+        background: linear-gradient(
+          135deg,
+          rgba(102, 126, 234, 0.1),
+          rgba(118, 75, 162, 0.1)
+        );
+      }
+
+      .cat-icon {
+        font-size: 32px;
+      }
+
+      .cat-label {
+        font-weight: 600;
+        color: #2c3e50;
+        font-size: 13px;
+      }
+
+      .chat-step {
+        animation: slideIn 0.3s ease;
+      }
+
+      .hidden {
+        display: none !important;
+      }
+
+      @media (max-width: 768px) {
+        .top-section {
+          grid-template-columns: 1fr;
+        }
+        .disaster-section {
+          grid-template-columns: 1fr;
+        }
+        .bottom-actions {
+          grid-template-columns: 1fr;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="caution-banner">
+        <span class="caution-icon">⚠️</span>
+        <span class="caution-text">Flood in Bhopal</span>
+        <span class="caution-icon">⚠️</span>
+      </div>
+
+      <div class="sddrs-section">
+        SDDRAS - Smart Disaster Response & Resource Allocation System
+      </div>
+
+      <div class="main-content">
+        <div class="top-section">
+          <div class="card alerts-card">
+            <h3 class="card-title">ALERTS</h3>
+            <div class="alerts-container">
+              <div class="alert-item">
+                <span class="alert-text">Flood in MP </span>
+                <span class="location-badge danger">nagar</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="card resource-card">
+            <h3 class="card-title">VERIFIED RESOURCE</h3>
+            <button class="resource-btn" id="openResourceBtn">
+              <span>📦</span> Request Now
+            </button>
+          </div>
+
+          <div class="card subscribe-card">
+            <h3 class="card-title">SUBSCRIBE FOR INFO</h3>
+            <p class="phone-label">PHONE NO.</p>
+            <input
+              type="tel"
+              class="phone-input"
+              placeholder="Enter number"
+              id="phoneInput"
+            />
+            <input
+              type="text"
+              class="phone-input"
+              placeholder="Enter area"
+              id="areaInputSub"
+            />
+            <button class="subscribe-btn" id="subscribeBtn">Subscribe</button>
+          </div>
+        </div>
+
+        <div class="disaster-section">
+          <div class="disaster-card" data-type="flood">
+            <div class="disaster-icon">🌊</div>
+            <h3>Flood</h3>
+          </div>
+          <div class="disaster-card" data-type="cyclone">
+            <div class="disaster-icon">🌀</div>
+            <h3>Cyclone</h3>
+          </div>
+          <div class="disaster-card" data-type="earthquake">
+            <div class="disaster-icon">🏚️</div>
+            <h3>Earthquake</h3>
+          </div>
+        </div>
+      </div>
+
+      <div class="bottom-actions">
+        <button class="action-btn chat-btn" id="chatBtn">
+          <span class="btn-icon">💬</span>CHAT NOW
+        </button>
+        <button class="action-btn donate-btn" id="donateBtn">
+          <span class="btn-icon">❤️</span>DONATE NOW
+        </button>
+      </div>
+    </div>
+
+    <!-- Resource Request Modal -->
+    <div class="modal" id="resourceModal">
+      <div class="modal-content">
+        <span class="close" data-modal="resourceModal">&times;</span>
+        <h2>📦 Resource Request</h2>
+        <form id="resourceForm">
+          <div class="form-group">
+            <label>Select Resource</label>
+            <select id="resourceObject" required>
+              <option value="">-- Select Item --</option>
+              <option value="water">💧 Water Bottles</option>
+              <option value="food">🍲 Food Packets</option>
+              <option value="medicine">💊 Medicines</option>
+              <option value="blankets">🛏️ Blankets</option>
+              <option value="tents">⛺ Tents</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Quantity</label>
+            <input type="number" id="resourceQty" value="1" min="1" max="100" />
+          </div>
+          <div class="form-group">
+            <label>Area / Location</label>
+            <select id="resourceArea" required>
+              <option value="">-- Select Area --</option>
+              <option value="Bhopal">Bhopal</option>
+              <option value="Indore">Indore</option>
+              <option value="Jabalpur">Jabalpur</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Phone Number (Optional)</label>
+            <input
+              type="tel"
+              id="resourcePhone"
+              placeholder="Enter phone for confirmation"
+            />
+          </div>
+          <button type="submit" class="submit-btn">Submit Request</button>
+        </form>
+      </div>
+    </div>
+
+    <!-- Emergency Chat Modal -->
+    <div class="modal" id="chatModal">
+      <div class="modal-content">
+        <span class="close" data-modal="chatModal">&times;</span>
+        <h2>🆘 Emergency Chat</h2>
+
+        <div class="chat-step" id="stepCategory">
+          <p class="form-group"><label>Select Emergency Type</label></p>
+          <div class="category-grid">
+            <button type="button" class="category-btn" data-category="sos">
+              <span class="cat-icon">🆘</span>
+              <span class="cat-label">SOS</span>
+            </button>
+            <button type="button" class="category-btn" data-category="medical">
+              <span class="cat-icon">🏥</span>
+              <span class="cat-label">Medical</span>
+            </button>
+            <button type="button" class="category-btn" data-category="shelter">
+              <span class="cat-icon">🏠</span>
+              <span class="cat-label">Shelter</span>
+            </button>
+            <button type="button" class="category-btn" data-category="food">
+              <span class="cat-icon">🍲</span>
+              <span class="cat-label">Food</span>
+            </button>
+          </div>
+        </div>
+
+        <div class="chat-step hidden" id="stepDetails">
+          <form id="emergencyForm">
+            <div class="form-group">
+              <label>Your Area</label>
+              <input
+                type="text"
+                id="emergencyArea"
+                placeholder="Enter your location"
+                required
+              />
+            </div>
+            <div class="form-group">
+              <label>Phone Number</label>
+              <input
+                type="tel"
+                id="emergencyPhone"
+                placeholder="Enter your phone number"
+                required
+              />
+            </div>
+            <div class="form-group">
+              <label>Additional Details</label>
+              <input
+                type="text"
+                id="emergencyMessage"
+                placeholder="Describe your situation"
+              />
+            </div>
+            <button type="submit" class="submit-btn">
+              Submit Emergency Request
+            </button>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <div class="notification" id="notification"></div>
+
+    <script>
+      // DOM Elements
+      const chatModal = document.getElementById("chatModal");
+      const resourceModal = document.getElementById("resourceModal");
+      const chatBtn = document.getElementById("chatBtn");
+      const openResourceBtn = document.getElementById("openResourceBtn");
+      const closeBtns = document.querySelectorAll(".close");
+      const notification = document.getElementById("notification");
+
+      let currentCategory = "";
+
+      // Notification Function
+      function showNotification(message, isError = false) {
+        notification.textContent = message;
+        notification.className =
+          "notification show" + (isError ? " error" : "");
+        setTimeout(() => {
+          notification.classList.remove("show");
+        }, 4000);
+      }
+
+      // Modal Functions
+      function openModal(modal) {
+        modal.style.display = "block";
+      }
+
+      function closeModal(modal) {
+        modal.style.display = "none";
+      }
+
+      chatBtn.addEventListener("click", () => openModal(chatModal));
+      openResourceBtn.addEventListener("click", () => openModal(resourceModal));
+
+      closeBtns.forEach((btn) => {
+        btn.addEventListener("click", function () {
+          const modalId = this.getAttribute("data-modal");
+          closeModal(document.getElementById(modalId));
+        });
+      });
+
+      window.addEventListener("click", (e) => {
+        if (e.target.classList.contains("modal")) {
+          closeModal(e.target);
+        }
+      });
+
+      // Subscribe Functionality
+      document
+        .getElementById("subscribeBtn")
+        .addEventListener("click", async () => {
+          const phone = document.getElementById("phoneInput").value.trim();
+          const area = document.getElementById("areaInputSub").value.trim();
+
+          if (!phone) {
+            showNotification("Please enter a phone number", true);
+            return;
+          }
+
+          try {
+            const response = await fetch("/subscribe", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({ phone, area }),
+            });
+
+            const data = await response.json();
+
+            if (response.ok) {
+              showNotification(data.message);
+              document.getElementById("phoneInput").value = "";
+              document.getElementById("areaInputSub").value = "";
+            } else {
+              showNotification(data.error || "Failed to subscribe", true);
+            }
+          } catch (error) {
+            showNotification("Network error. Please try again.", true);
+          }
+        });
+
+      // Emergency Chat
+      const categoryBtns = document.querySelectorAll(".category-btn");
+      const stepCategory = document.getElementById("stepCategory");
+      const stepDetails = document.getElementById("stepDetails");
+
+      categoryBtns.forEach((btn) => {
+        btn.addEventListener("click", function () {
+          currentCategory = this.getAttribute("data-category");
+          categoryBtns.forEach((b) => b.classList.remove("active"));
+          this.classList.add("active");
+
+          setTimeout(() => {
+            stepCategory.classList.add("hidden");
+            stepDetails.classList.remove("hidden");
+          }, 300);
+        });
+      });
+
+      document
+        .getElementById("emergencyForm")
+        .addEventListener("submit", async (e) => {
+          e.preventDefault();
+
+          const area = document.getElementById("emergencyArea").value.trim();
+          const phone = document.getElementById("emergencyPhone").value.trim();
+          const message = document
+            .getElementById("emergencyMessage")
+            .value.trim();
+
+          try {
+            const response = await fetch("/emergency-request", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({
+                category: currentCategory,
+                area,
+                phone,
+                message,
+              }),
+            });
+
+            const data = await response.json();
+
+            if (response.ok) {
+              showNotification(
+                "Emergency request submitted! SMS confirmation sent."
+              );
+              closeModal(chatModal);
+              e.target.reset();
+              stepDetails.classList.add("hidden");
+              stepCategory.classList.remove("hidden");
+            } else {
+              showNotification(data.error || "Failed to submit request", true);
+            }
+          } catch (error) {
+            showNotification("Network error. Please try again.", true);
+          }
+        });
+
+      // Resource Request
+      document
+        .getElementById("resourceForm")
+        .addEventListener("submit", async (e) => {
+          e.preventDefault();
+
+          const resource = document.getElementById("resourceObject").value;
+          const quantity = document.getElementById("resourceQty").value;
+          const area = document.getElementById("resourceArea").value;
+          const phone = document.getElementById("resourcePhone").value.trim();
+
+          try {
+            const response = await fetch("/resource-request", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({ resource, quantity, area, phone }),
+            });
+
+            const data = await response.json();
+
+            if (response.ok) {
+              showNotification("Resource request submitted successfully!");
+              closeModal(resourceModal);
+              e.target.reset();
+            } else {
+              showNotification(data.error || "Failed to submit request", true);
+            }
+          } catch (error) {
+            showNotification("Network error. Please try again.", true);
+          }
+        });
+    </script>
+  </body>
+</html>
